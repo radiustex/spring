@@ -1,10 +1,12 @@
 package hiber;
 
 import hiber.config.AppConfig;
+import hiber.model.Car;
 import hiber.model.User;
 import hiber.service.UserService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import javax.persistence.NoResultException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -15,19 +17,26 @@ public class MainApp {
 
       UserService userService = context.getBean(UserService.class);
 
-      userService.add(new User("User1", "Lastname1", "user1@mail.ru"));
-      userService.add(new User("User2", "Lastname2", "user2@mail.ru"));
-      userService.add(new User("User3", "Lastname3", "user3@mail.ru"));
-      userService.add(new User("User4", "Lastname4", "user4@mail.ru"));
+      User one = new User("User1", "User11", "user1@mail.ru");
+      User two = new User("User2", "User22", "user2@mail.ru");
+      User three = new User("User3", "User33", "user3@mail.ru");
+      User four = new User("User4", "User44", "user4@mail.ru");
 
-      List<User> users = userService.listUsers();
-      for (User user : users) {
-         System.out.println("Id = "+user.getId());
-         System.out.println("First Name = "+user.getFirstName());
-         System.out.println("Last Name = "+user.getLastName());
-         System.out.println("Email = "+user.getEmail());
-         System.out.println();
+      Car toyota = new Car("Car1", 123);
+      Car honda = new Car("Car2", 456);
+      Car bmw = new Car("Car3", 789);
+      Car lada = new Car("Car4", 101);
+
+      userService.add(one.setCar(toyota).setUser(one));
+      userService.add(two.setCar(honda).setUser(two));
+      userService.add(three.setCar(bmw).setUser(three));
+      userService.add(four.setCar(lada).setUser(four));
+
+      for (User user : userService.listUsers()){
+         System.out.println(user+" "+ user.getCar());
       }
+
+      System.out.println(userService.getUserByCar("Car3", 789));
 
       context.close();
    }
